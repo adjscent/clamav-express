@@ -1,0 +1,15 @@
+{
+	"name": "clamav-express-server",
+	"version": "1.0.0",
+	"main": "server.js",
+	"type": "commonjs",
+	"scripts": {
+		"start": "node server.js"
+	},
+	"dependencies": {
+		"clamscan": "^2.4.0",
+		"express": "^5.1.0"
+	},
+	"devDependencies": {
+	}
+}
