@@ -30,11 +30,13 @@ This project is a simple Express server that accepts file uploads as a blob and 
 
 ## API
 
-- `POST /scan` — Upload a file (form field: `file`). Returns scan result.
+- `POST /scanstream` — Upload a file (form field: `file`). Returns scan result.
+- `POST /scanfile` — Upload a file (form field: `file`). Returns scan result.
 
 Example
 ```
-curl --data-binary @DANGER -H "Content-Type: application/octet-stream" http://localhost:3000/scan
+curl --data-binary @DANGER -H "Content-Type: application/octet-stream" http://localhost:3000/scanfile
+curl --data-binary @DANGER -H "Content-Type: application/octet-stream" http://localhost:3000/scanstream
 ```
 
 ## Notes

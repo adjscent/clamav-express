@@ -3,13 +3,20 @@ const NodeClam = require("clamscan");
 const fs = require("fs");
 const path = require("path");
 const app = express();
+const { Readable } = require("stream");
 
 app.use(
-  "/scan",
+  "/scanfile",
   express.raw({ type: "application/octet-stream", limit: "1000mb" })
 );
 
-app.post("/scan", async (req, res) => {
+// Middleware for /scanstream to handle raw binary data
+app.use(
+  "/scanstream",
+  express.raw({ type: "application/octet-stream", limit: "1000mb" })
+);
+
+app.post("/scanfile", async (req, res) => {
   if (!req.body || !Buffer.isBuffer(req.body)) {
     return res.status(400).json({ error: "No file blob in request body" });
   }
@@ -26,6 +33,7 @@ app.post("/scan", async (req, res) => {
       const clamscanInstance = await new NodeClam().init({
         clamdscan: {
           timeout: 60000,
+          socket: "/tmp/clamd.ctl",
         },
       });
 
@@ -43,6 +51,30 @@ app.post("/scan", async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   });
+});
+
+// POST /scanstream: scan the request body as a stream
+app.post("/scanstream", async (req, res) => {
+  if (!req.body || !Buffer.isBuffer(req.body)) {
+    return res.status(400).json({ error: "No file blob in request body" });
+  }
+  try {
+    const clamscanInstance = await new NodeClam().init({
+      clamdscan: {
+        timeout: 60000,
+        socket: "/tmp/clamd.ctl",
+      },
+    });
+    // Convert buffer to stream
+    const stream = Readable.from(req.body);
+    const { isInfected, viruses } = await clamscanInstance.scanStream(stream);
+    res.json({
+      infected: isInfected,
+      viruses: viruses || [],
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.get("/", (req, res) => {
