@@ -1,4 +1,7 @@
-# ClamAV Express Server
+  
+# ClamAV Express Server [![CI Unit Test](https://github.com/adjscent/clamav-express/actions/workflows/ci.yml/badge.svg)](https://github.com/adjscent/clamav-express/actions/workflows/ci.yml)
+
+
 
 This project is a simple Express server that accepts file uploads as a blob and scans them using ClamAV (clamdscan) via the [clamscan](https://github.com/kylefarris/clamscan) Node.js library.
 
