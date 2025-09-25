@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e
-service clamav-daemon start
+/usr/sbin/clamd
 pnpm start
